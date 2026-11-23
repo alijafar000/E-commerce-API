@@ -90,10 +90,10 @@ A production-ready RESTful backend API for a complete e-commerce platform built 
 
 | Service | URL |
 |---------|-----|
-| **API Base URL** | `https://your-app.onrender.com` |
-| **Swagger Docs** | `https://your-app.onrender.com/api-docs` |
-| **Health Check** | `https://your-app.onrender.com/health` |
-| **OpenAPI JSON** | `https://your-app.onrender.com/api-docs.json` |
+| **API Base URL** | `https://e-commerce-api-qjeq.onrender.com` |
+| **Swagger Docs** | `https://e-commerce-api-qjeq.onrender.com/api-docs` |
+| **Health Check** | `https://e-commerce-api-qjeq.onrender.com/health` |
+| **OpenAPI JSON** | `https://e-commerce-api-qjeq.onrender.com/api-docs.json` |
 
 > ⚠️ **Note:** Free tier Render hosting may cause 15-30 second cold start delays after 15 minutes of inactivity.
 
@@ -106,6 +106,7 @@ ecommerce-backend/
 │
 ├── config/
 │   ├── db.js                    # MongoDB connection
+│   ├── cloudinary.js            # Cloudinary Configuation
 │   ├── razorpay.js              # Razorpay instance config
 │   └── swagger.js               # Swagger/OpenAPI specification
 │
@@ -125,6 +126,7 @@ ecommerce-backend/
 │   ├── uploadMiddleware.js      # Multer config (5MB, images only)
 │   ├── rateLimiter.js           # Rate limiting configs
 │   └── errorMiddleware.js       # Global error handler
+│   └── validator.js             # Express validator rules
 │
 ├── models/
 │   ├── User.js                  # User schema
@@ -148,11 +150,7 @@ ecommerce-backend/
 │   ├── uploadToCloudinary.js    # Cloudinary upload helper
 │   └── deleteFromCloudinary.js  # Cloudinary delete helper
 │
-├── validators/
-│   └── validator.js             # express-validator rules
-│
 ├── .env                         # Environment variables (NOT pushed)
-├── .env.example                 # Environment variables template
 ├── .gitignore
 ├── package.json
 ├── package-lock.json
@@ -174,8 +172,8 @@ ecommerce-backend/
 ### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/your-username/ecommerce-backend.git
-cd ecommerce-backend
+git clone https://github.com/alijafar000/E-commerce-API.git
+cd backend-ecommerce
 ```
 
 ### Step 2: Install Dependencies
@@ -204,14 +202,14 @@ npm run dev
 npm start
 ```
 
-Server will start at: `http://localhost:5000`
+Server will start at: `http://localhost:8000`
 
 ### Step 5: Verify Installation
 
 Open in browser:
-- API Root: `http://localhost:5000`
-- Swagger Docs: `http://localhost:5000/api-docs`
-- Health Check: `http://localhost:5000/health`
+- API Root: `http://localhost:8000`
+- Swagger Docs: `http://localhost:8000/api-docs`
+- Health Check: `http://localhost:8000/health`
 
 ---
 
@@ -264,7 +262,7 @@ RAZORPAY_KEY_SECRET=
 
 ## 📡 API Endpoints
 
-**Base URL:** `http://localhost:5000` (dev) or `https://your-app.onrender.com` (production)
+**Base URL:** `http://localhost:8000` (dev) or `https://e-commerce-api-qjeq.onrender.com` (production)
 
 **Total APIs:** 37+
 
@@ -896,7 +894,7 @@ Content-Type: multipart/form-data
 Import the collection:
 1. Open Postman → **Import**
 2. Select **Link** tab
-3. Enter: `http://localhost:5000/api-docs.json`
+3. Enter: `http://localhost:8000/api-docs.json`
 4. Click **Continue** → **Import**
 
 **Testing Flow:**
@@ -937,8 +935,8 @@ Import the collection:
 
 Interactive API documentation is available at:
 
-- **Local:** `http://localhost:5000/api-docs`
-- **Production:** `https://your-app.onrender.com/api-docs`
+- **Local:** `http://localhost:8000/api-docs`
+- **Production:** `https://e-commerce-api-qjeq.onrender.com`
 
 ### Features
 - ✅ All 37+ endpoints documented
@@ -951,7 +949,7 @@ Interactive API documentation is available at:
 ### Raw OpenAPI Spec
 ```bash
 # Download JSON
-curl http://localhost:5000/api-docs.json -o swagger.json
+curl http://localhost:8000/api-docs.json -o swagger.json
 ```
 
 ---
@@ -993,13 +991,6 @@ curl http://localhost:5000/api-docs.json -o swagger.json
 - Create database user with read/write permissions
 - Copy connection string to `MONGO_URI`
 
-### Razorpay Webhook (Optional — Advanced)
-For production payment confirmations:
-```
-POST https://your-app.onrender.com/api/payment/webhook
-```
-Configure webhook URL in Razorpay Dashboard → Settings → Webhooks.
-
 ---
 
 ## 🤝 Contributing
@@ -1028,11 +1019,11 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 ## 👨‍💻 Author
 
-**Your Name**
+**Jafar Ali**
 
-- GitHub: [@your-username](https://github.com/your-username)
-- LinkedIn: [Your Name](https://linkedin.com/in/your-profile)
-- Email: your.email@example.com
+- GitHub: [@your-username](https://github.com/alijafar000)
+- LinkedIn: [Your Name](www.linkedin.com/in/jafar-ali-397826293)
+- Email: alijafarali000@gmail.com
 
 ---
 
