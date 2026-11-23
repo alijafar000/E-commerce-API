@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Razorpay Test Checkout</title>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+    <h2>Razorpay Test Checkout</h2>
+
+    <label for="token">JWT Token:</label><br />
+    <input type="password" id="token" placeholder="Paste your JWT token" style="width: 400px; max-width: 90%;" />
+
+    <br /><br />
+
+    <label for="fullName">Full Name:</label><br />
+    <input id="fullName" value="Test User" />
+
+    <br /><br />
+
+    <label for="phone">Phone:</label><br />
+    <input id="phone" value="9876543210" />
+
+    <br /><br />
+
+    <label for="address">Address:</label><br />
+    <input id="address" value="123 Test Street" />
+
+    <br /><br />
+
+    <label for="city">City:</label><br />
+    <input id="city" value="Jaipur" />
+
+    <br /><br />
+
+    <label for="state">State:</label><br />
+    <input id="state" value="Rajasthan" />
+
+    <br /><br />
+
+    <label for="postalCode">Postal Code:</label><br />
+    <input id="postalCode" value="302001" />
+
+    <br /><br />
+
+    <!-- <label for="country">Country:</label><br />
+    <input id="country" value="India" />
+
+    <br /><br /> -->
+
+    <button id="payButton">Create Order & Pay</button>
+
+    <pre id="result"></pre>
+
+    <script>
+        const API_BASE_URL = "http://localhost:8000";
+
+        const resultElement = document.getElementById("result");
+        const payButton = document.getElementById("payButton");
+
+        payButton.addEventListener("click", async () => {
+            const token = document.getElementById("token").value.trim();
+
+            if (!token) {
+                alert("Please enter your JWT token.");
+                return;
+            }
+
+            payButton.disabled = true;
+            resultElement.textContent = "Creating Razorpay order...";
+
+            try {
+                // Step 1: Create order on your backend.
+                const orderResponse = await fetch(
+                    `${API_BASE_URL}/api/payment/create-razorpay-order`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+
+                        body: JSON.stringify({
+                            fullName: document.getElementById("fullName").value.trim(),
+                            phone: document.getElementById("phone").value.trim(),
+                            addressLine: document.getElementById("address").value.trim(),
+                            city: document.getElementById("city").value.trim(),
+                            state: document.getElementById("state").value.trim(),
+                            postalCode: document.getElementById("postalCode").value.trim(),
+                            country: "India"
+                        })
+
+                    }
+                );
+
+                const orderData = await orderResponse.json();
+
+                if (!orderResponse.ok || !orderData.success) {
+                    throw new Error(
+                        orderData.message || "Could not create Razorpay order."
+                    );
+                }
+
+                // Step 2: Open Razorpay Checkout.
+                const options = {
+                    key: orderData.keyId,
+                    amount: orderData.amount,
+                    currency: orderData.currency,
+                    name: "My E-commerce Store",
+                    description: "Test Order",
+                    order_id: orderData.razorpayOrderId,
+
+                    handler: async function (paymentResponse) {
+                        resultElement.textContent =
+                            "Payment received. Verifying payment on backend...";
+
+                        try {
+                            // Step 3: Verify payment on your backend.
+                            const verifyResponse = await fetch(
+                                `${API_BASE_URL}/api/payment/verify-razorpay-payment`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "Authorization": `Bearer ${token}`
+                                    },
+                                    body: JSON.stringify({
+                                        razorpay_order_id: paymentResponse.razorpay_order_id,
+                                        razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                                        razorpay_signature: paymentResponse.razorpay_signature
+                                    })
+                                }
+                            );
+
+                            const verifyData = await verifyResponse.json();
+
+                            resultElement.textContent = JSON.stringify(
+                                {
+                                    checkoutResponse: paymentResponse,
+                                    verificationResponse: verifyData
+                                },
+                                null,
+                                2
+                            );
+
+                            if (!verifyResponse.ok || !verifyData.success) {
+                                resultElement.textContent +=
+                                    "\nPayment verification failed. Check backend logs and Razorpay Test Mode.";
+                            }
+                        } catch (error) {
+                            resultElement.textContent =
+                                "Verification request failed: " + error.message;
+                        }
+                    },
+
+                    modal: {
+                        ondismiss: function () {
+                            resultElement.textContent =
+                                "Checkout closed. Check the order's status before retrying.";
+                        }
+                    },
+
+                    theme: {
+                        color: "#3399cc"
+                    }
+                };
+
+                const checkout = new Razorpay(options);
+
+                checkout.on("payment.failed", function (response) {
+                    resultElement.textContent = JSON.stringify(
+                        {
+                            message: "Test payment failed.",
+                            error: response.error
+                        },
+                        null,
+                        2
+                    );
+                });
+
+                checkout.open();
+
+                resultElement.textContent =
+                    "Razorpay Checkout opened. Complete a test payment.";
+            } catch (error) {
+                resultElement.textContent = "Error: " + error.message;
+            } finally {
+                payButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
