@@ -10,13 +10,17 @@ const options = {
                 'Complete REST API documentation for E-commerce backend — Auth, Products, Cart, Orders, Payments, Reviews & Wishlist.',
             contact: {
                 name: 'API Support',
-                email: 'support@ecommerce.com'
+                email: 'alijafarali000@gmail.com'
             }
         },
         servers: [
             {
                 url: 'http://localhost:8000',
                 description: 'Local Development Server'
+            },
+            {
+                url: 'https://e-commerce-api-qjeq.onrender.com',
+                description: 'Production Server'
             }
         ],
         tags: [
