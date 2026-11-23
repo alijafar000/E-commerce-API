@@ -27,6 +27,7 @@ const allowedOrigins = [
     'http://localhost:3000',      // Local frontend
     'http://localhost:5173',      // Vite
     'https://your-frontend.vercel.app', // Production frontend
+    'https://e-commerce-api-qjeq.onrender.com'
 ]
 
 app.use(cors({
