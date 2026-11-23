@@ -1021,8 +1021,8 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 **Jafar Ali**
 
-- GitHub: [@your-username](https://github.com/alijafar000)
-- LinkedIn: [Your Name](www.linkedin.com/in/jafar-ali-397826293)
+- GitHub: [@Jafar](https://github.com/alijafar000)
+- LinkedIn: [Jafar](www.linkedin.com/in/jafar-ali-397826293)
 - Email: alijafarali000@gmail.com
 
 ---
